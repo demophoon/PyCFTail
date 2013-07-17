@@ -19,10 +19,10 @@ def sigintHandler(signum, frame):
 
 def parseCommandlineArgs():
     parser = argparse.ArgumentParser(description="Stalk Campfire room without needing to join")
-    parser.add_argument("-d", "--domain", help="Campfire domain to use", required=True)
-    parser.add_argument("-r", "--room", help="Campfire room to stalk. Can be numerical room ID or string name", required=True)
     parser.add_argument("-e", "--environment", help="Keyring environment to use to pull API Token", default="campfire")
+    parser.add_argument("-d", "--domain", help="Campfire domain to use", required=True)
     parser.add_argument("-l", "--local_timezone", help="Local timezone for use when displaying timestamps", default="America/Chicago")
+    parser.add_argument("-r", "--room", help="Campfire room to stalk. Can be numerical room ID or string name", required=True)
     return parser.parse_args()
 
 
