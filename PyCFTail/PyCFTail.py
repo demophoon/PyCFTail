@@ -19,18 +19,18 @@ def sigintHandler(signum, frame):
 
 def parseCommandlineArgs():
     parser = argparse.ArgumentParser(description="Stalk Campfire room without needing to join")
-    parser.add_argument("-e", "--environment", help="Keyring environment to use to pull API Token", default="campfire")
     parser.add_argument("-d", "--domain", help="Campfire domain to use", required=True)
     parser.add_argument("-l", "--local_timezone", help="Local timezone for use when displaying timestamps", default="America/Chicago")
     parser.add_argument("-r", "--room", help="Campfire room to stalk. Can be numerical room ID or string name", required=True)
+    parser.add_argument("-s", "--service", help="Keyring service to use to pull API Token", default="campfire")
     return parser.parse_args()
 
 
-def getCFAPIToken(environment, domain):
+def getCFAPIToken(service, domain):
     #Gets the password out of keyring. "username" is the subdomain we connect to. See the
     # campfire API for more information on the subdomain
     kr = keyring.get_keyring()
-    return kr.get_password(environment, domain)
+    return kr.get_password(service, domain)
 
 
 def findCFRoom(cf, room_id):
@@ -98,7 +98,7 @@ def main():
     args = parseCommandlineArgs()
 
     # log into campfire
-    cf = pinder.Campfire(args.domain, getCFAPIToken(args.environment, args.domain))
+    cf = pinder.Campfire(args.domain, getCFAPIToken(args.service, args.domain))
 
     # make sure we got logged in
     if (not isinstance(cf, pinder.Campfire)):
@@ -110,7 +110,7 @@ def main():
 
     # make sure room was found
     if (not isinstance(room, pinder.Room)):
-        print "Unable to find room %s\n" % sys.argv[1]
+        print "Unable to find room %s\n" % args.room
         sys.exit(1)
 
     last_message_id = None
